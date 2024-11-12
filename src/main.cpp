@@ -267,11 +267,15 @@ SC_MODULE(Testbench) {
         // Instantiate the controller
         controller = new TrafficLightController("controller");
 
-        // Connect the switches
-        for (int i = 0; i < 8; ++i) {
-            controller->sw[i](sw_signals[i]);
-            sw_signals[i].write(false); // Initialize switches to 0
-        }
+				int initial_state = 0b10010000;
+				
+				// Set initial state
+				for (int i = 0; i < 8; ++i) {
+					controller->sw[i](sw_signals[i]);
+					sw_signals[i].write(initial_state & 1);
+					initial_state >>= 1;
+				}
+
 
         // Connect the clock
         controller->clk(clk_signal);
@@ -405,11 +409,18 @@ SC_MODULE(Testbench) {
 													<< ", EW_Orange_LED: " << (LED_signals[4].read() ? "🟠" : "⚪")
 													<< ", EW_Green_LED: " << (LED_signals[5].read() ? "🟢" : "⚪") << std::endl;
 								std::cout << "Emergency_LED: " << (LED_signals[6].read() ? "🚨" : "⚪") << std::endl;
+								
 
                 // Update previous LED states
                 for (int i = 0; i < 7; ++i) {
                     prev_LED_states[i] = current_LED_states[i];
                 }
+
+								// Show current switch states
+								std::cout << "Switch States: ";
+								for (int i = 0; i < 8; ++i) {
+									std::cout << (sw_signals[i].read() ? "1" : "0");
+								}
             }
         }
     }
