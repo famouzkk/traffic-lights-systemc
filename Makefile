@@ -38,7 +38,7 @@ CC := g++
 CXX := g++
 LD := g++
 
-CFLAGS := -std=c11
+CFLAGS := -std=c17
 CXXFLAGS :=
 CPPFLAGS := -g -Wall -Wextra -pedantic
 LDFLAGS :=
