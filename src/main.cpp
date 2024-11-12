@@ -396,14 +396,15 @@ SC_MODULE(Testbench) {
 
             // If LED states have changed, print the new states
             if (led_changed) {
-                std::cout << "Current Simulation Time: " << sc_time_stamp() << std::endl;
-                std::cout << "NS_Red_LED: " << LED_signals[0].read()
-                          << ", NS_Orange_LED: " << LED_signals[1].read()
-                          << ", NS_Green_LED: " << LED_signals[2].read() << std::endl;
-                std::cout << "EW_Red_LED: " << LED_signals[3].read()
-                          << ", EW_Orange_LED: " << LED_signals[4].read()
-                          << ", EW_Green_LED: " << LED_signals[5].read() << std::endl;
-                std::cout << "Emergency_LED: " << LED_signals[6].read() << std::endl;
+								// Same as above, but with emojis too
+								std::cout << "Current Simulation Time: " << sc_time_stamp() << std::endl;
+								std::cout << "NS_Red_LED: " << (LED_signals[0].read() ? "🔴" : "⚪")
+													<< ", NS_Orange_LED: " << (LED_signals[1].read() ? "🟠" : "⚪")
+													<< ", NS_Green_LED: " << (LED_signals[2].read() ? "🟢" : "⚪") << std::endl;
+								std::cout << "EW_Red_LED: " << (LED_signals[3].read() ? "🔴" : "⚪")
+													<< ", EW_Orange_LED: " << (LED_signals[4].read() ? "🟠" : "⚪")
+													<< ", EW_Green_LED: " << (LED_signals[5].read() ? "🟢" : "⚪") << std::endl;
+								std::cout << "Emergency_LED: " << (LED_signals[6].read() ? "🚨" : "⚪") << std::endl;
 
                 // Update previous LED states
                 for (int i = 0; i < 7; ++i) {
