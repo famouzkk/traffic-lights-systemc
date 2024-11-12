@@ -40,7 +40,7 @@ LD := g++
 
 CFLAGS := -std=c17
 CXXFLAGS :=
-CPPFLAGS := -g -Wall -Wextra -pedantic
+CPPFLAGS := -g -Wall -Wextra -pedantic -std=c++17
 LDFLAGS :=
 LDLIBS := $(LIBS)
 
