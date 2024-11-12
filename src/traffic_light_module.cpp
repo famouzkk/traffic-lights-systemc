@@ -34,6 +34,19 @@ std::string TrafficLightController::get_state_name() {
   return state_name;
 }
 
+bool TrafficLightController::canChangeFromState(State from) {
+  if(current_state == FLASHING_ORANGE || current_state == PRIVILIEGED_VEHICLE) {
+    return true;
+  }
+
+  if(current_state == from) {
+    return true;
+  }
+
+  return false;
+}
+  
+
 void TrafficLightController::change_state() {
   bool sw_NS_GREEN = sw[0].read();
   bool sw_NS_RED = sw[1].read();
@@ -75,7 +88,7 @@ void TrafficLightController::change_state() {
   }
 
   if (sw_NS_GREEN) {
-    if (current_state != NS_ORANGE_TO_GREEN) {
+    if (!canChangeFromState(NS_ORANGE_TO_GREEN)) {
       current_state = INVALID;
       return;
     }
@@ -84,7 +97,7 @@ void TrafficLightController::change_state() {
   }
 
   if (sw_NS_RED) {
-    if (current_state != NS_ORANGE_TO_RED) {
+    if (!canChangeFromState(NS_ORANGE_TO_RED)) {
       current_state = INVALID;
       return;
     }
@@ -93,7 +106,7 @@ void TrafficLightController::change_state() {
   }
 
   if (sw_NS_ORANGE_TO_GREEN) {
-    if (current_state != NS_RED) {
+    if (!canChangeFromState(NS_RED)) {
       current_state = INVALID;
       return;
     }
@@ -102,7 +115,7 @@ void TrafficLightController::change_state() {
   }
 
   if (sw_NS_ORANGE_TO_RED) {
-    if (current_state != NS_GREEN) {
+    if (!canChangeFromState(NS_GREEN)) {
       current_state = INVALID;
       return;
     }

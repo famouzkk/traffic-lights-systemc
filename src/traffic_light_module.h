@@ -31,6 +31,8 @@ SC_MODULE(TrafficLightController) {
     current_state = NS_GREEN;
   }
 
+  bool canChangeFromState(State from);
+
   std::string get_state_name();
   void change_state();
   void display_state();
