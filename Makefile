@@ -43,6 +43,12 @@ CXXFLAGS :=
 CPPFLAGS := -g -Wall -Wextra -pedantic
 LDFLAGS :=
 LDLIBS := $(LIBS)
+
+ifeq ($(shell uname), Darwin)
+    INCLUDES += -I/opt/homebrew/include
+    LDFLAGS += -L/opt/homebrew/lib
+endif
+
 # flags required for dependency generation; passed to compilers
 DEPFLAGS = -MT $@ -MD -MP -MF $(DEPDIR)/$*.Td
 
