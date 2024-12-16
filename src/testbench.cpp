@@ -17,7 +17,11 @@ void set_nonblocking_terminal(bool enable) {
   }
 }
 
-Testbench::~Testbench() { delete controller; }
+Testbench::~Testbench() {
+  delete module1;
+  delete module2;
+}
+
 
 void Testbench::user_interaction() {
   set_nonblocking_terminal(true);
