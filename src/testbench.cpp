@@ -26,101 +26,119 @@ void Testbench::user_interaction() {
     ssize_t bytes_read = read(STDIN_FILENO, &ch, 1);
     if (bytes_read > 0) {
       switch (ch) {
-      case '1':
-        sw_signals[0].write(true);
-        break;
-      case 'q': case 'Q':
-        sw_signals[0].write(false);
-        break;
+        // Switch toggles (same as before)
+        case '1':
+          sw_signals[0].write(true);
+          break;
+        case 'q': case 'Q':
+          sw_signals[0].write(false);
+          break;
 
-      case '2':
-        sw_signals[1].write(true);
-        break;
-      case 'w': case 'W':
-        sw_signals[1].write(false);
-        break;
+        case '2':
+          sw_signals[1].write(true);
+          break;
+        case 'w': case 'W':
+          sw_signals[1].write(false);
+          break;
 
-      case '3':
-        sw_signals[2].write(true);
-        break;
-      case 'e': case 'E':
-        sw_signals[2].write(false);
-        break;
+        case '3':
+          sw_signals[2].write(true);
+          break;
+        case 'e': case 'E':
+          sw_signals[2].write(false);
+          break;
 
-      case '4':
-        sw_signals[3].write(true);
-        break;
-      case 'r': case 'R':
-        sw_signals[3].write(false);
-        break;
+        case '4':
+          sw_signals[3].write(true);
+          break;
+        case 'r': case 'R':
+          sw_signals[3].write(false);
+          break;
 
-      case '5':
-        sw_signals[4].write(true);
-        break;
-      case 't': case 'T':
-        sw_signals[4].write(false);
-        break;
+        case '5':
+          sw_signals[4].write(true);
+          break;
+        case 't': case 'T':
+          sw_signals[4].write(false);
+          break;
 
-      case '6':
-        sw_signals[5].write(true);
-        break;
-      case 'y': case 'Y':
-        sw_signals[5].write(false);
-        break;
+        case '6':
+          sw_signals[5].write(true);
+          break;
+        case 'y': case 'Y':
+          sw_signals[5].write(false);
+          break;
 
-      case 'x': case 'X':
-        std::cout << "Zamykanie..." << std::endl;
-        set_nonblocking_terminal(false);
-        sc_stop();
-        return;
+        // Select which intersection to "view" in the console
+        case 'a': case 'A': selectedIntersection = 0; break;
+        case 's': case 'S': selectedIntersection = 1; break;
+        case 'd': case 'D': selectedIntersection = 2; break;
+        case 'f': case 'F': selectedIntersection = 3; break;
+        case 'g': case 'G': selectedIntersection = 4; break;
 
-      default:
-        break;
+        case 'x':
+        case 'X':
+          std::cout << "Zamykanie..." << std::endl;
+          set_nonblocking_terminal(false);
+          sc_stop();
+          return;
+
+        default:
+          break;
       }
     }
 
-    // Check LED changes
+    // Check only the selected intersection’s LEDs for changes
     bool led_changed = false;
-    for (int i = 0; i < 7; ++i) {
-      current_LED_states[i] = LED_signals[i].read();
-      if (current_LED_states[i] != prev_LED_states[i]) {
+    for (int j = 0; j < 7; j++) {
+      current_LED_states[selectedIntersection][j] = 
+        LED_signals[selectedIntersection][j].read();
+      if (current_LED_states[selectedIntersection][j] != 
+          prev_LED_states[selectedIntersection][j]) {
         led_changed = true;
       }
     }
 
     if (led_changed) {
-      std::cout << "\t" << (LED_signals[0].read() ? "🔴" : "⚪") << std::endl
-                << "\t" << (LED_signals[1].read() ? "🟠" : "⚪") << std::endl
-                << "\t" << (LED_signals[2].read() ? "🟢" : "⚪") << std::endl;
+      std::cout << "=== Wybrana skrzyżowanie #" 
+                << selectedIntersection << " ===" << std::endl;
+      std::cout << "Aktualny czas symulacji: " << sc_time_stamp() << std::endl;
 
-      std::cout << (LED_signals[3].read() ? "🔴" : "⚪") << "\t\t"
-                << (LED_signals[3].read() ? "🔴" : "⚪") << std::endl
-                << (LED_signals[4].read() ? "🟠" : "⚪") << "\t\t"
-                << (LED_signals[4].read() ? "🟠" : "⚪") << std::endl
-                << (LED_signals[5].read() ? "🟢" : "⚪") << "\t\t"
-                << (LED_signals[5].read() ? "🟢" : "⚪") << std::endl;
+      std::cout << "\t" << (LED_signals[selectedIntersection][0].read() ? "🔴" : "⚪") << std::endl
+                << "\t" << (LED_signals[selectedIntersection][1].read() ? "🟠" : "⚪") << std::endl
+                << "\t" << (LED_signals[selectedIntersection][2].read() ? "🟢" : "⚪") << std::endl;
 
-      std::cout << "\t" << (LED_signals[0].read() ? "🔴" : "⚪") << std::endl
-                << "\t" << (LED_signals[1].read() ? "🟠" : "⚪") << std::endl
-                << "\t" << (LED_signals[2].read() ? "🟢" : "⚪") << std::endl;
+      std::cout << (LED_signals[selectedIntersection][3].read() ? "🔴" : "⚪") << "\t\t"
+                << (LED_signals[selectedIntersection][3].read() ? "🔴" : "⚪") << std::endl
+                << (LED_signals[selectedIntersection][4].read() ? "🟠" : "⚪") << "\t\t"
+                << (LED_signals[selectedIntersection][4].read() ? "🟠" : "⚪") << std::endl
+                << (LED_signals[selectedIntersection][5].read() ? "🟢" : "⚪") << "\t\t"
+                << (LED_signals[selectedIntersection][5].read() ? "🟢" : "⚪") << std::endl;
 
-      std::cout << "NS_Red_LED: " << (LED_signals[0].read() ? "🔴" : "⚪")
-                << ", NS_Orange_LED: " << (LED_signals[1].read() ? "🟠" : "⚪")
-                << ", NS_Green_LED: " << (LED_signals[2].read() ? "🟢" : "⚪")
+      std::cout << "\t" << (LED_signals[selectedIntersection][0].read() ? "🔴" : "⚪") << std::endl
+                << "\t" << (LED_signals[selectedIntersection][1].read() ? "🟠" : "⚪") << std::endl
+                << "\t" << (LED_signals[selectedIntersection][2].read() ? "🟢" : "⚪") << std::endl;
+
+      std::cout << "NS_Red_LED: " << (LED_signals[selectedIntersection][0].read() ? "🔴" : "⚪")
+                << ", NS_Orange_LED: " << (LED_signals[selectedIntersection][1].read() ? "🟠" : "⚪")
+                << ", NS_Green_LED: " << (LED_signals[selectedIntersection][2].read() ? "🟢" : "⚪")
                 << std::endl;
-      std::cout << "EW_Red_LED: " << (LED_signals[3].read() ? "🔴" : "⚪")
-                << ", EW_Orange_LED: " << (LED_signals[4].read() ? "🟠" : "⚪")
-                << ", EW_Green_LED: " << (LED_signals[5].read() ? "🟢" : "⚪")
+      std::cout << "EW_Red_LED: " << (LED_signals[selectedIntersection][3].read() ? "🔴" : "⚪")
+                << ", EW_Orange_LED: " << (LED_signals[selectedIntersection][4].read() ? "🟠" : "⚪")
+                << ", EW_Green_LED: " << (LED_signals[selectedIntersection][5].read() ? "🟢" : "⚪")
                 << std::endl;
-      std::cout << "Emergency_LED: " << (LED_signals[6].read() ? "🚨" : "⚪")
+      std::cout << "Emergency_LED: " << (LED_signals[selectedIntersection][6].read() ? "🚨" : "⚪")
                 << std::endl;
 
-      for (int i = 0; i < 7; ++i) {
-        prev_LED_states[i] = current_LED_states[i];
+      // Store new states as 'previous'
+      for (int j = 0; j < 7; j++) {
+        prev_LED_states[selectedIntersection][j] = 
+          current_LED_states[selectedIntersection][j];
       }
 
+      // Print switch states
       std::cout << "Stany przełączników: ";
-      for (int i = 0; i < 6; ++i) {
+      for (int i = 0; i < 6; i++) {
         std::cout << (sw_signals[i].read() ? "1" : "0");
       }
       std::cout << std::endl << std::endl;

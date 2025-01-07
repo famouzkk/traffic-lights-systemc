@@ -40,7 +40,8 @@ void TrafficLightModule1::change_state() {
   }
 
   // Print old state
-  std::cout << "Poprzedni stan: " << state_to_str[current_state] << std::endl;
+  // std::cout << "Poprzedni stan: " << state_to_str[current_state] << std::endl;
+  std::cout << "[" << name() << "] " << "Poprzedni stan: " << state_to_str[current_state] << std::endl;
 
   // Save new switch states
   for(int i = 0; i < 6; i++){
@@ -88,7 +89,7 @@ void TrafficLightModule1::change_state() {
   }
 
   if (current_state == INVALID) {
-    std::cout << "INVALID STATE" << std::endl;
+    std::cout << "[" << name() << "] " << "INVALID STATE" << std::endl;
     out_fifo.write((int)INVALID);
   }
 }
