@@ -1,9 +1,8 @@
 #include "testbench.h"
-#include <iostream>
-#include <string>
-#include <systemc.h>
 #include <termios.h>
 #include <unistd.h>
+#include <iostream>
+#include <string>
 
 void set_nonblocking_terminal(bool enable) {
   static struct termios oldt, newt;
@@ -16,12 +15,6 @@ void set_nonblocking_terminal(bool enable) {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
   }
 }
-
-Testbench::~Testbench() {
-  delete module1;
-  delete module2;
-}
-
 
 void Testbench::user_interaction() {
   set_nonblocking_terminal(true);
@@ -36,71 +29,66 @@ void Testbench::user_interaction() {
       case '1':
         sw_signals[0].write(true);
         break;
-      case 'q':
-      case 'Q':
+      case 'q': case 'Q':
         sw_signals[0].write(false);
         break;
+
       case '2':
         sw_signals[1].write(true);
         break;
-      case 'w':
-      case 'W':
+      case 'w': case 'W':
         sw_signals[1].write(false);
         break;
+
       case '3':
         sw_signals[2].write(true);
         break;
-      case 'e':
-      case 'E':
+      case 'e': case 'E':
         sw_signals[2].write(false);
         break;
+
       case '4':
         sw_signals[3].write(true);
         break;
-      case 'r':
-      case 'R':
+      case 'r': case 'R':
         sw_signals[3].write(false);
         break;
+
       case '5':
         sw_signals[4].write(true);
         break;
-      case 't':
-      case 'T':
+      case 't': case 'T':
         sw_signals[4].write(false);
         break;
+
       case '6':
         sw_signals[5].write(true);
         break;
-      case 'y':
-      case 'Y':
+      case 'y': case 'Y':
         sw_signals[5].write(false);
         break;
-      case 'x':
-      case 'X':
+
+      case 'x': case 'X':
         std::cout << "Zamykanie..." << std::endl;
         set_nonblocking_terminal(false);
         sc_stop();
-        break;
+        return;
+
       default:
         break;
       }
     }
 
-    for (int i = 0; i < 7; ++i) {
-      current_LED_states[i] = LED_signals[i].read();
-    }
-
+    // Check LED changes
     bool led_changed = false;
     for (int i = 0; i < 7; ++i) {
+      current_LED_states[i] = LED_signals[i].read();
       if (current_LED_states[i] != prev_LED_states[i]) {
         led_changed = true;
-        break;
       }
     }
 
     if (led_changed) {
-      std::cout << "Aktualny czas symulacji: " << sc_time_stamp() << std::endl;
-
       std::cout << "\t" << (LED_signals[0].read() ? "🔴" : "⚪") << std::endl
                 << "\t" << (LED_signals[1].read() ? "🟠" : "⚪") << std::endl
                 << "\t" << (LED_signals[2].read() ? "🟢" : "⚪") << std::endl;
