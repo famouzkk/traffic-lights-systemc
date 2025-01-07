@@ -22,9 +22,12 @@ void Testbench::user_interaction() {
   while (true) {
     wait(10, SC_MS);
 
+    bool pressed_something = true;
+
     char ch = '\0';
     ssize_t bytes_read = read(STDIN_FILENO, &ch, 1);
     if (bytes_read > 0) {
+      pressed_something = true;
       switch (ch) {
         // Switch toggles (same as before)
         case '1':
@@ -99,7 +102,7 @@ void Testbench::user_interaction() {
       }
     }
 
-    if (led_changed) {
+    if (led_changed || pressed_something) {
       std::cout << "=== Wybrana skrzyżowanie #" 
                 << selectedIntersection << " ===" << std::endl;
       std::cout << "Aktualny czas symulacji: " << sc_time_stamp() << std::endl;
