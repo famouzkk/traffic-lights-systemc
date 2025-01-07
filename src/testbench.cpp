@@ -29,7 +29,7 @@ void Testbench::user_interaction() {
     if (bytes_read > 0) {
       pressed_something = true;
       switch (ch) {
-        // Switch toggles (same as before)
+        
         case '1':
           sw_signals[0].write(true);
           break;
@@ -72,7 +72,7 @@ void Testbench::user_interaction() {
           sw_signals[5].write(false);
           break;
 
-        // Select which intersection to "view" in the console
+        
         case 'a': case 'A': selectedIntersection = 0; break;
         case 's': case 'S': selectedIntersection = 1; break;
         case 'd': case 'D': selectedIntersection = 2; break;
@@ -91,7 +91,7 @@ void Testbench::user_interaction() {
       }
     }
 
-    // Check only the selected intersection’s LEDs for changes
+    
     bool led_changed = false;
     for (int j = 0; j < 7; j++) {
       current_LED_states[selectedIntersection][j] = 
@@ -103,7 +103,7 @@ void Testbench::user_interaction() {
     }
 
     if (led_changed || pressed_something) {
-      std::cout << "=== Wybrana skrzyżowanie #" 
+      std::cout << "=== Wybrane skrzyżowanie #" 
                 << selectedIntersection << " ===" << std::endl;
       std::cout << "Aktualny czas symulacji: " << sc_time_stamp() << std::endl;
 
@@ -133,13 +133,13 @@ void Testbench::user_interaction() {
       std::cout << "Emergency_LED: " << (LED_signals[selectedIntersection][6].read() ? "🚨" : "⚪")
                 << std::endl;
 
-      // Store new states as 'previous'
+      
       for (int j = 0; j < 7; j++) {
         prev_LED_states[selectedIntersection][j] = 
           current_LED_states[selectedIntersection][j];
       }
 
-      // Print switch states
+      
       std::cout << "Stany przełączników: ";
       for (int i = 0; i < 6; i++) {
         std::cout << (sw_signals[i].read() ? "1" : "0");

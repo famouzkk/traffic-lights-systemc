@@ -15,7 +15,6 @@ SC_MODULE(TrafficLightModule1) {
   sc_in<bool> sw[6];
   sc_in<bool> clk;
 
-  // Standard traffic lights
   sc_out<bool> NS_Red_LED;
   sc_out<bool> NS_Orange_LED;
   sc_out<bool> NS_Green_LED;
@@ -23,7 +22,6 @@ SC_MODULE(TrafficLightModule1) {
   sc_out<bool> EW_Orange_LED;
   sc_out<bool> EW_Green_LED;
 
-  // FIFO output to the second module (when INVALID is triggered)
   sc_fifo_out<int> out_fifo;
 
   State current_state;
@@ -32,9 +30,8 @@ SC_MODULE(TrafficLightModule1) {
   SC_CTOR(TrafficLightModule1) {
     SC_METHOD(control_logic);
     sensitive << clk.pos();
-    current_state = NS_GREEN; // Start with a default
+    current_state = NS_GREEN;
 
-    // Initialize previous switches
     for(int i = 0; i < 6; i++) {
       prev_sw[i] = false;
     }
@@ -46,7 +43,6 @@ SC_MODULE(TrafficLightModule1) {
 
   bool canChangeFromState(State from);
 
-  // Helper functions for each “task”
   void set_NS_green_state();
   void set_NS_red_state();
   void set_NS_orange_to_green_state();

@@ -4,10 +4,10 @@
 
 void TrafficLightModule2::main_process() {
   while(true) {
-    int incoming_state = in_fifo.read(); // blocking read
+    int incoming_state = in_fifo.read();
     printf("[%s] [MODULE2] Received state: %d\n", name(), incoming_state);
     
-    if(incoming_state == INVALID) { // 'INVALID' index
+    if(incoming_state == INVALID) {
       std::cout << "[" << name() << "] " << "[MODULE2] Detected INVALID state -> triggering emergency" << std::endl;
       trigger_emergency();
     }

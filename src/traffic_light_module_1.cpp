@@ -12,7 +12,6 @@ void TrafficLightModule1::control_logic() {
 }
 
 void TrafficLightModule1::change_state() {
-  // Read switch signals
   bool sw_NS_GREEN           = sw[0].read();
   bool sw_NS_RED             = sw[1].read();
   bool sw_NS_ORANGE_TO_GREEN = sw[2].read();
@@ -26,7 +25,6 @@ void TrafficLightModule1::change_state() {
     sw_FLASHING_ORANGE, sw_PRIVILIEGED_VEHICLE
   };
 
-  // Detect if any switch changed
   bool switch_changed = false;
   for(int i = 0; i < 6; i++){
     if(current_sw[i] != prev_sw[i]) {
@@ -39,11 +37,8 @@ void TrafficLightModule1::change_state() {
     return;
   }
 
-  // Print old state
-  // std::cout << "Poprzedni stan: " << state_to_str[current_state] << std::endl;
   std::cout << "[" << name() << "] " << "Poprzedni stan: " << state_to_str[current_state] << std::endl;
 
-  // Save new switch states
   for(int i = 0; i < 6; i++){
     prev_sw[i] = current_sw[i];
   }
@@ -115,8 +110,6 @@ void TrafficLightModule1::display_state() {
       set_flashing_orange_state();
       break;
     case INVALID:
-      // The second module will handle the emergency LED
-      // We can keep all lights off here
       NS_Red_LED.write(false);
       NS_Orange_LED.write(false);
       NS_Green_LED.write(false);
